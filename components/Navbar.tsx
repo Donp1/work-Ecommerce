@@ -11,6 +11,8 @@ export const Navbar = () => {
   const [cartItemCount, setCartIemCount] = useState<number>(0);
   const [open, setOpen] = useState(false);
 
+  const { cart } = useCartStore();
+
   useEffect(() => {
     const cartString = localStorage.getItem("cart");
     const cart = cartString ? JSON.parse(cartString) : null;
@@ -44,9 +46,9 @@ export const Navbar = () => {
               <Link href="/checkout">
                 <ShoppingCart size={24} />
               </Link>
-              {cartItemCount > 0 && (
+              {cart.length > 0 && (
                 <span className="absolute top-0 -right-1 inline-flex items-center justify-center w-4 h-4 bg-blue-500 text-[10px] text-white rounded-full">
-                  {cartItemCount}
+                  {cart.length}
                 </span>
               )}
             </div>
