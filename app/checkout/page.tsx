@@ -35,6 +35,7 @@ const ProcessOrder = () => {
       return acc + quantity * priceInNaira;
     }, 0);
   };
+  if (typeof window === "undefined") return;
 
   const handlePayment = async () => {
     console.log(calculateTotal());
