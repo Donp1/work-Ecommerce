@@ -2,9 +2,16 @@
 import { Navbar } from "@/components/Navbar";
 import { useCartStore } from "@/store/cartStore";
 import { useState, useEffect } from "react";
-import { usePaystackPayment } from "react-paystack";
 import { useRouter } from "next/navigation";
 import { User } from "@/store/authStore";
+
+import dynamic from "next/dynamic";
+
+// Dynamically import PaystackButton with SSR disabled
+const PaystackButton = dynamic(
+  () => import("react-paystack").then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
 
 const ProcessOrder = () => {
   const { cart, updateCartItemQuantity, removeFromCart } = useCartStore();
@@ -43,23 +50,23 @@ const ProcessOrder = () => {
 
   // <script src="https://js.paystack.co/v2/inline.js"></script>;
 
-  const initPaystack = usePaystackPayment({
-    reference: new Date().getTime().toString(),
-    email: user?.email,
-    amount: calculateTotal() * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
-    publicKey: "pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32",
-    currency: "NGN",
-  });
+  // const initPaystack = usePaystackPayment({
+  //   reference: new Date().getTime().toString(),
+  //   email: user?.email,
+  //   amount: calculateTotal() * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+  //   publicKey: "pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32",
+  //   currency: "NGN",
+  // });
 
   const handlePayment = async () => {
-    initPaystack({
-      onClose: () => {},
-      onSuccess: (response) => {
-        if (response.status == "success") {
-          router.push("/thanks");
-        }
-      },
-    });
+    // initPaystack({
+    //   onClose: () => {},
+    //   onSuccess: (response) => {
+    //     if (response.status == "success") {
+    //       router.push("/thanks");
+    //     }
+    //   },
+    // });
     // console.log(PaystackPop);
     // const handler = PaystackPop.setup({
     //   amount: calculateTotal() * 100,
@@ -178,12 +185,21 @@ const ProcessOrder = () => {
                   })}
                 </span>
               </div>
-              <button
-                className="mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition"
-                onClick={handlePayment}
-              >
-                Place Order
-              </button>
+
+              <PaystackButton
+                text="Check out"
+                publicKey="pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32"
+                amount={calculateTotal() * 100}
+                email={user?.email || ""}
+                currency="NGN"
+                onClose={() => {}}
+                onSuccess={(res) => {
+                  if (res.status == "success") {
+                    router.push("/thanks");
+                  }
+                }}
+                className="bg-primary cursor-pointer w-full mt-5 text-lg  hover:bg-secondary transition-colors px-6 py-3 rounded-lg font-semibold"
+              />
             </div>
           )}
         </div>
