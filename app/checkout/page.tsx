@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 const ProcessOrder = () => {
   const { cart, updateCartItemQuantity, removeFromCart } = useCartStore();
   const [quantities, setQuantities] = useState<{ [id: number]: number }>({});
+  const [windowAvailable, setWindowAvailable] = useState(false);
 
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
@@ -22,6 +23,10 @@ const ProcessOrder = () => {
     setQuantities(initialQuantities);
   }, [cart]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") setWindowAvailable(true);
+  }, []);
+
   const handleQuantityChange = (id: number, value: number) => {
     const newQuantity = Math.max(1, value); // minimum quantity = 1
     setQuantities((prev) => ({ ...prev, [id]: newQuantity }));
@@ -35,11 +40,9 @@ const ProcessOrder = () => {
       return acc + quantity * priceInNaira;
     }, 0);
   };
-  if (typeof window === "undefined") return;
 
   const handlePayment = async () => {
-    console.log(calculateTotal());
-    if (typeof window !== "undefined") {
+    if (windowAvailable) {
       const popup = new PaystackPop();
       popup.newTransaction({
         amount: calculateTotal() * 100,
