@@ -2,7 +2,7 @@
 import { getUser } from "@/utils/getUser";
 import { create } from "zustand";
 
-interface User {
+export interface User {
   id?: string;
   email?: string;
   password: string;
@@ -20,7 +20,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
-  setIsAuthenticated: (auth) => set({ isAuthenticated: true }),
+  setIsAuthenticated: (auth) => set({ isAuthenticated: auth }),
   login: ({ email, password }) => {
     try {
       const userString = localStorage.getItem("user");

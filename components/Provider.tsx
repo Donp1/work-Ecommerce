@@ -14,14 +14,14 @@ const Provider = ({ children }: pageProps) => {
     const cartString = localStorage.getItem("cart");
     const cart = cartString ? JSON.parse(cartString) : null;
 
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
+
     if (cart) {
       setCart(cart);
     } else {
       setCart([]);
     }
-
-    const userString = localStorage.getItem("cart");
-    const user = userString ? JSON.parse(userString) : null;
 
     if (user) {
       setIsAuthenticated(true);
@@ -29,6 +29,7 @@ const Provider = ({ children }: pageProps) => {
       setIsAuthenticated(false);
     }
   }, []);
+
   return <>{children}</>;
 };
 

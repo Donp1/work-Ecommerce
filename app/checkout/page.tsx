@@ -2,18 +2,22 @@
 import { Navbar } from "@/components/Navbar";
 import { useCartStore } from "@/store/cartStore";
 import { useState, useEffect } from "react";
-import PaystackPop from "@paystack/inline-js";
+import { usePaystackPayment } from "react-paystack";
 import { useRouter } from "next/navigation";
+import { User } from "@/store/authStore";
 
 const ProcessOrder = () => {
   const { cart, updateCartItemQuantity, removeFromCart } = useCartStore();
   const [quantities, setQuantities] = useState<{ [id: number]: number }>({});
-  const [windowAvailable, setWindowAvailable] = useState(false);
-
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
+  const [user, setUser] = useState<User | null>(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
+    setUser(user);
+  }, []);
 
   useEffect(() => {
     const initialQuantities: { [id: number]: number } = {};
@@ -22,10 +26,6 @@ const ProcessOrder = () => {
     });
     setQuantities(initialQuantities);
   }, [cart]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") setWindowAvailable(true);
-  }, []);
 
   const handleQuantityChange = (id: number, value: number) => {
     const newQuantity = Math.max(1, value); // minimum quantity = 1
@@ -41,29 +41,67 @@ const ProcessOrder = () => {
     }, 0);
   };
 
-  const handlePayment = async () => {
-    if (windowAvailable) {
-      const popup = new PaystackPop();
-      popup.newTransaction({
-        amount: calculateTotal() * 100,
-        email: user?.email,
-        key: "pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32",
-        currency: "NGN",
+  // <script src="https://js.paystack.co/v2/inline.js"></script>;
 
-        onSuccess: (tx) => {
-          if (tx.status === "success") {
-            router.push("/thanks");
-          }
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      });
-    }
+  const initPaystack = usePaystackPayment({
+    reference: new Date().getTime().toString(),
+    email: user?.email,
+    amount: calculateTotal() * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    publicKey: "pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32",
+    currency: "NGN",
+  });
+
+  const handlePayment = async () => {
+    initPaystack({
+      onClose: () => {},
+      onSuccess: (response) => {
+        if (response.status == "success") {
+          router.push("/thanks");
+        }
+      },
+    });
+    // console.log(PaystackPop);
+    // const handler = PaystackPop.setup({
+    //   amount: calculateTotal() * 100,
+    //   email: user?.email,
+    //   key: "pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32",
+    //   currency: "NGN",
+    //   //   onSuccess: (tx) => {
+    //   //   if (tx.status === "success") {
+    //   //     router.push("/thanks");
+    //   //   }
+    //   // },
+    //   // onError: (error) => {
+    //   //   console.log(error);
+    //   // },
+    // });
+    // if (windowAvailable) {
+    //   const popup = new PaystackPop();
+    //   popup.newTransaction({
+    //     amount: calculateTotal() * 100,
+    //     email: user?.email,
+    //     key: "pk_test_a7c704266afa044c65da0fdb5a8317817b1b2e32",
+    //     currency: "NGN",
+    //     onSuccess: (tx) => {
+    //       if (tx.status === "success") {
+    //         router.push("/thanks");
+    //       }
+    //     },
+    //     onError: (error) => {
+    //       console.log(error);
+    //     },
+    //   });
+    // }
   };
 
   return (
     <>
+      {/* <Script
+        src="https://js.paystack.co/v2/inline.js"
+        strategy="afterInteractive"
+        onLoad={(e) => console.log(e?.PaystackPop)}
+        onError={(e) => console.error("Script failed to load", e)}
+      /> */}
       <Navbar />
       <div className="flex items-center justify-center">
         <div className="min-h-screen sm:w-[50%] md:w-[50%]  bg-background text-textPrimary p-6">
