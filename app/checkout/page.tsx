@@ -38,7 +38,7 @@ const ProcessOrder = () => {
 
   const handlePayment = async () => {
     console.log(calculateTotal());
-    if (window) {
+    if (typeof window !== "undefined") {
       const popup = new PaystackPop();
       popup.newTransaction({
         amount: calculateTotal() * 100,
