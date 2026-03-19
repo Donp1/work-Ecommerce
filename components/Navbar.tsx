@@ -25,10 +25,10 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-surface shadow-md p-4 w-full">
+    <nav className="bg-green-800 shadow-md p-4 w-full">
       <div className="container mx-auto flex items-center justify-between flex-wrap">
         <Link href="/">
-          <span className="text-primary text-xl font-bold">ABUMarket</span>
+          <span className="text-primary text-xl font-bold">GlobalMarket</span>
         </Link>
         <button
           className="md:hidden text-textPrimary"
