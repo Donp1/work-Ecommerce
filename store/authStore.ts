@@ -73,7 +73,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user");
     localStorage.removeItem("cart");
     set({ user: null, isAuthenticated: false });
   },
