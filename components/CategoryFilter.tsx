@@ -9,9 +9,9 @@ export const CategoryFilter = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("https://fakestoreapi.com/products");
+        const res = await fetch("https://dummyjson.com/products");
         const data = await res.json();
-        setProducts(data);
+        setProducts(data?.products || []); // Adjust based on API response structure
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
@@ -19,9 +19,10 @@ export const CategoryFilter = () => {
 
     const fetchCategories = async () => {
       try {
-        const res = await fetch("https://fakestoreapi.com/products/categories");
+        const res = await fetch("https://dummyjson.com/products/category-list");
         const data = await res.json();
         setCategories(["all", ...data]);
+        console.log(data);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
@@ -43,8 +44,8 @@ export const CategoryFilter = () => {
           className="appearance-none w-full px-4 py-2 rounded-lg border border-secondary bg-surface text-textPrimary hover:border-primary focus:outline-none focus:ring-2 focus:ring-secondary pr-10"
         >
           {categories.map((category) => (
-            <option key={category} value={category}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
+            <option key={category} value={category || ""}>
+              {category || ""}
             </option>
           ))}
         </select>

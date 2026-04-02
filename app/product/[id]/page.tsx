@@ -19,7 +19,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`https://fakestoreapi.com/products/${id}`)
+      fetch(`https://dummyjson.com/products/${id}`)
         .then((res) => res.json())
         .then((data) => setProduct(data))
         .catch((err) => console.error("Error fetching product:", err));
@@ -36,7 +36,7 @@ const ProductDetails = () => {
       <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-10">
         <div className="w-full h-[400px] bg-white rounded-xl flex items-center justify-center shadow-md">
           <img
-            src={product.image}
+            src={product.thumbnail}
             alt={product.title}
             className="max-h-full max-w-full object-contain"
           />

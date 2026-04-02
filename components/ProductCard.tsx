@@ -32,21 +32,21 @@ export const ProductCard = ({ product }: Props) => {
 
   return (
     <div className="bg-surface rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-xl transition">
-      <Link href={`/product/${product.id}`} passHref>
+      <Link href={`/product/${product?.id}`} passHref>
         <div className="w-full h-64 overflow-hidden bg-white flex items-center justify-center">
           <img
-            src={product.image}
-            alt={product.title}
+            src={product?.thumbnail} // Adjust based on API response structure
+            alt={product?.title}
             className="max-h-full max-w-full object-contain"
           />
         </div>
       </Link>
       <div className="p-4 flex-1 flex flex-col">
         <h2 className="text-lg font-semibold text-textPrimary line-clamp-2 mb-2">
-          {product.title}
+          {product?.title}
         </h2>
         <p className="text-sm text-textSecondary line-clamp-2 mb-4">
-          {product.description}
+          {product?.description}
         </p>
         <div className="mt-auto text-primary font-bold text-lg flex items-center justify-between">
           <span>

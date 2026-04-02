@@ -7,13 +7,13 @@ export interface Product {
   price: number;
   description: string;
   category: string;
-  image: string;
+  thumbnail: string;
 }
 
 interface ProductState {
   products: Product[];
   setProducts: (products: Product[]) => void;
-  filterByCategory: (category: string) => void;
+  filterByCategory: (category: any) => void;
   filteredProducts: Product[];
 }
 

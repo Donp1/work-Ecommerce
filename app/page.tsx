@@ -15,10 +15,11 @@ const Products = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await fetch("https://fakestoreapi.com/products");
+        // const res = await fetch("https://fakestoreapi.com/products");
+        const res = await fetch("https://dummyjson.com/products");
         const data = await res.json();
         setLoading(false);
-        setProducts(data);
+        setProducts(data?.products || []); // Adjust based on API response structure
       } catch (error) {
         console.error("Failed to fetch products:", error);
         setLoading(false);

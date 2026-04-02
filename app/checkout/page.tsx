@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 // Dynamically import PaystackButton with SSR disabled
 const PaystackButton = dynamic(
   () => import("react-paystack").then((mod) => mod.PaystackButton),
-  { ssr: false }
+  { ssr: false },
 );
 
 const ProcessOrder = () => {
@@ -128,7 +128,7 @@ const ProcessOrder = () => {
                     className="flex items-center bg-surface rounded-xl p-4 shadow-md"
                   >
                     <img
-                      src={item.image}
+                      src={item?.thumbnail}
                       alt={item.title}
                       className="w-24 h-24 object-contain bg-white rounded-lg"
                     />
@@ -146,7 +146,7 @@ const ProcessOrder = () => {
                           onChange={(e) =>
                             handleQuantityChange(
                               item.id,
-                              parseInt(e.target.value)
+                              parseInt(e.target.value),
                             )
                           }
                           className="w-16 px-2 py-1 rounded bg-background border border-gray-700 focus:ring-primary focus:outline-none"
